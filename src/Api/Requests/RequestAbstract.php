@@ -2,11 +2,12 @@
 
 namespace Getnet\Api\Requests;
 
-use Getnet\Api\Authentication;
 use Getnet\Api\Environment;
-use Getnet\Api\Exceptions\GetnetException;
-use Getnet\Api\Helpers\ArrayUtil;
+use Getnet\Api\Authentication;
+use Getnet\Api\Helpers\CurlUtil;
 use Getnet\Api\Helpers\JsonUtil;
+use Getnet\Api\Helpers\ArrayUtil;
+use Getnet\Api\Exceptions\GetnetException;
 
 abstract class RequestAbstract
 {
@@ -20,13 +21,11 @@ abstract class RequestAbstract
 
     private $environment;
     private $authentication;
-    private $curlOptions;
 
-    public function __construct(Authentication $authentication, Environment $environment, array $curlOptions = [])
+    public function __construct(Authentication $authentication, Environment $environment)
     {
         $this->setEnvironment($environment);
         $this->setAuthentication($authentication);
-        $this->setCurlOptions($curlOptions);
     }
 
 
@@ -52,40 +51,26 @@ abstract class RequestAbstract
         return $this;
     }
 
-    public function getCurlOptions()
-    {
-        return $this->curlOptions;
-    }
-
-    public function setCurlOptions($curlOptions)
-    {
-        $this->curlOptions = $curlOptions;
-        return $this;
-    }
-
     protected function sendRequest($method, $url = '', $content = NULL, array $headers = [])
     {
         $url = empty($url) ? $this->_getUrl() : $url;
         $content = empty($content) ? $this->_getContent() : $content;
         $headers = empty($headers) ? $this->_getHeader() : $headers;
 
-        $curl = curl_init($url);
+        $curl = curl_init();
 
-        $this->setCurlOptions([
-            CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_POSTFIELDS => $content,
-            CURLOPT_HTTPHEADER => ArrayUtil::convertArrayToHeader($headers),
-            CURLOPT_ENCODING => '',
-            CURLOPT_RETURNTRANSFER => true,
-        ]);
-
-        curl_setopt_array($curl, $this->getCurlOptions());
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $content);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, ArrayUtil::convertArrayToHeader($headers));
+        curl_setopt($curl, CURLOPT_ENCODING, '');
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
         $response = curl_exec($curl);
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         if (curl_errno($curl)) {
-            throw new GetnetException('Curl error: ' . curl_error($curl), self::CURL_ERROR_CODE);
+            throw new GetnetException('cURL error: ' . CurlUtil::getCurlErrnoDescription(curl_errno($curl)), self::CURL_ERROR_CODE);
         }
 
         curl_close($curl);

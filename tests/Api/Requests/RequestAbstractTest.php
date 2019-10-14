@@ -61,7 +61,7 @@ class RequestAbstractTest extends TestCase
     {
         $this->expectException(GetnetException::class);
         $this->expectExceptionCode(RequestAbstract::CURL_ERROR_CODE);
-        $this->expectExceptionMessage('Curl error: ');
+        $this->expectExceptionMessage('cURL error: ');
 
         $testedClass = $this->getMockForAbstractClass(RequestAbstract::class, [
             $this->authentication,
