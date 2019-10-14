@@ -59,7 +59,7 @@ class Authentication
     {
         $this->authorization = $authorization;
 
-        if (!empty($this->authorization)) {
+        if (!empty($this->authorization) && !isset($this->authorization['timestamp'])) {
             $this->authorization['timestamp'] = time();
         }
 
