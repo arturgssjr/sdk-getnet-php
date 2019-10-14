@@ -52,25 +52,4 @@ class CardTokenizationRequestTest extends TestCase
         $this->assertObjectHasAttribute('tokenNumber', $return);
         $this->assertEquals(128, strlen($return->getTokenNumber()));
     }
-
-//    public function testGetCardTokenFail()
-//    {
-//        $this->expectException(GetnetException::class);
-//        $this->expectExceptionCode(400);
-//        $this->expectExceptionMessage('Invalid Token Card');
-//
-//        $testedClass = $this->getMockForAbstractClass(CardTokenizationRequest::class, [
-//            $this->authentication,
-//            $this->environment,
-//        ]);
-//
-//        $reflector = new ReflectionObject($testedClass);
-//
-//        $method = $reflector->getMethod('getCardToken');
-//
-//        $method->invokeArgs($testedClass, [
-//            $this->data['cardTokenization'  ]['cardNumber'],
-//            $this->data['cardTokenization']['customerId'],
-//        ]);
-//    }
 }

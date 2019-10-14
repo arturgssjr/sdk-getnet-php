@@ -38,10 +38,6 @@ class CardTokenizationRequest extends RequestAbstract
 
         $cardToken = $this->sendRequest(RequestAbstract::HTTP_POST);
 
-        if (empty($cardToken['number_token'])) {
-            throw new GetnetException('Invalid Token Card', 400);
-        }
-
         return $this->cardTokenization->setTokenNumber($cardToken['number_token']);
     }
 
