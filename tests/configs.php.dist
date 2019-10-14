@@ -1,0 +1,13 @@
+<?php
+
+return [
+    'seller' => [
+        'client_id' => '',
+        'secret_id' => '',
+        'seller_id' => '',
+    ],
+    'cardTokenization' => [
+        'cardNumber' => '',
+        'customerId' => '',
+    ]
+];

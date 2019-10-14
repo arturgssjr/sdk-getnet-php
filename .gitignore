@@ -1,0 +1,10 @@
+.idea/
+phpunit.xml
+vendor/
+composer.lock
+_reports/
+.phpunit.result.cache
+configs.php
+.env
+*.override.yml
+/nbproject/
