@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile
       args:
         - TZ=${TZ}
+        - INSTALL_XDEBUG=${INSTALL_XDEBUG}
+        - INSTALL_OPCACHE=${INSTALL_OPCACHE}
     tty: true
     volumes: 
       - .:/var/www/
