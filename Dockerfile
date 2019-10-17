@@ -1,4 +1,5 @@
-FROM php:latest
+ARG PHP_VERSION=${PHP_VERSION}
+FROM php:${PHP_VERSION}
 
 LABEL maintainer="Artur Júnior <arturgssjr@gmail.com>"
 

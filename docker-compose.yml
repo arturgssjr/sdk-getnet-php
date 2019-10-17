@@ -9,6 +9,7 @@ services:
         - TZ=${TZ}
         - INSTALL_XDEBUG=${INSTALL_XDEBUG}
         - INSTALL_OPCACHE=${INSTALL_OPCACHE}
+        - PHP_VERSION=${PHP_VERSION}
     tty: true
     volumes: 
       - .:/var/www/
