@@ -1,5 +1,4 @@
-ARG PHP_VERSION=${PHP_VERSION}
-FROM php:${PHP_VERSION}
+FROM php:latest
 
 LABEL maintainer="Artur Júnior <arturgssjr@gmail.com>"
 
@@ -19,10 +18,6 @@ RUN apt-get update && \
     libmcrypt-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Configuração Timezone
-ARG TZ="UTC"
-RUN echo "date.timezone=${TZ}" > $PHP_INI_DIR/conf.d/date.timezone.ini
-
 # Configuração XDebug
 ARG INSTALL_XDEBUG=false
 RUN if [ ${INSTALL_XDEBUG} = true ]; then \
@@ -35,9 +30,9 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; then \
 ;fi
 
 COPY ./conf/xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini
-RUN sed -i "s/xdebug.remote_autostart=0/xdebug.remote_autostart=1/" $PHP_INI_DIR/conf.d/xdebug.ini && \
-    sed -i "s/xdebug.remote_enable=0/xdebug.remote_enable=1/" $PHP_INI_DIR/conf.d/xdebug.ini && \
-    sed -i "s/xdebug.cli_color=0/xdebug.cli_color=1/" $PHP_INI_DIR/conf.d/xdebug.ini
+RUN sed -i "s|xdebug.remote_autostart=0|xdebug.remote_autostart=1|g" $PHP_INI_DIR/conf.d/xdebug.ini && \
+    sed -i "s|xdebug.remote_enable=0|xdebug.remote_enable=1|g" $PHP_INI_DIR/conf.d/xdebug.ini && \
+    sed -i "s|xdebug.cli_color=0|xdebug.cli_color=1|g" $PHP_INI_DIR/conf.d/xdebug.ini
 
 # Configuração OPcache
 ARG INSTALL_OPCACHE=false
@@ -55,5 +50,15 @@ RUN curl -sS https://getcomposer.org/installer \
 RUN getent group 1000 || groupadd web -g 1000
 RUN getent passwd 1000 || adduser --uid 1000 --gid 1000 --disabled-password --gecos "" web 
 RUN usermod -a -G web www-data
+
+# Configuração php.ini
+ARG APPLICATION_ENVIRONMENT="production"
+ENV APPLICATION_ENVIRONMENT=${APPLICATION_ENVIRONMENT}
+RUN mv "$PHP_INI_DIR/php.ini-${APPLICATION_ENVIRONMENT}" "$PHP_INI_DIR/php.ini"
+ARG TZ="UTC"
+RUN sed -i "s|;date.timezone =|date.timezone = ${TZ}|g" $PHP_INI_DIR/php.ini && \
+    sed -i "s|max_execution_time = 30|max_execution_time = 60|g" $PHP_INI_DIR/php.ini && \
+    sed -i "s|max_input_time = 60|max_input_time = 90|g" $PHP_INI_DIR/php.ini && \
+    sed -i "s|memory_limit = 128M|memory_limit = 256M|g" $PHP_INI_DIR/php.ini
 
 WORKDIR /var/www
