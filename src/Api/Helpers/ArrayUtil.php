@@ -7,7 +7,7 @@ namespace Getnet\Api\Helpers;
 class ArrayUtil
 {
 
-    public static function convertArrayToHeader($array)
+    public static function convertArrayToHeader(array $array)
     {
         return array_map(
             function ($k, $v) {

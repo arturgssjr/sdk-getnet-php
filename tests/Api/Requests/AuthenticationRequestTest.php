@@ -45,27 +45,22 @@ class AuthenticationRequestTest extends TestCase
 
         $return = $method->invoke($testedClass);
 
-        $this->assertEquals(200, $return['statusCode']);
-        $this->assertIsArray($return);
-        $this->assertArrayHasKey('access_token', $return);
-        $this->assertArrayHasKey('token_type', $return);
-        $this->assertArrayHasKey('expires_in', $return);
-        $this->assertArrayHasKey('scope', $return);
-
-        return $return;
+        self::assertIsArray($return);
+        self::assertNotNull($return);
+        self::assertEquals(200, $return['statusCode']);
+        self::assertArrayHasKey('access_token', $return);
+        self::assertArrayHasKey('token_type', $return);
+        self::assertArrayHasKey('expires_in', $return);
+        self::assertArrayHasKey('scope', $return);
     }
 
-    /**
-     * @depends testGetAuthenticationSuccess
-     * @param array $authorizationToken
-     * @throws ReflectionException
-     */
-    public function testGetAuthenticationSuccessNotExpired(array $authorizationToken)
+    public function testGetNewAuthenticationSuccess()
     {
-        $this->authentication->setAuthorization($authorizationToken);
+        $authentication = clone $this->authentication;
+        $authentication->setAuthorization($this->data['authorization']);
 
         $testedClass = $this->getMockForAbstractClass(AuthenticationRequest::class, [
-            $this->authentication,
+            $authentication,
             $this->environment,
         ]);
 
@@ -75,12 +70,13 @@ class AuthenticationRequestTest extends TestCase
 
         $return = $method->invoke($testedClass);
 
-        $this->assertEquals(200, $return['statusCode']);
-        $this->assertIsArray($return);
-        $this->assertArrayHasKey('access_token', $return);
-        $this->assertArrayHasKey('token_type', $return);
-        $this->assertArrayHasKey('expires_in', $return);
-        $this->assertArrayHasKey('scope', $return);
+        self::assertIsArray($return);
+        self::assertNotNull($return);
+        self::assertEquals(200, $return['statusCode']);
+        self::assertArrayHasKey('access_token', $return);
+        self::assertArrayHasKey('token_type', $return);
+        self::assertArrayHasKey('expires_in', $return);
+        self::assertArrayHasKey('scope', $return);
     }
 
     public function testGetAuthenticationFail()
@@ -104,46 +100,5 @@ class AuthenticationRequestTest extends TestCase
         $method = $reflector->getMethod('getAuthorization');
 
         $method->invoke($testedClass);
-    }
-
-    /**
-     * @depends testGetAuthenticationSuccess
-     * @param array $authorizationToken
-     */
-    public function testGetAuthorizationSuccess(array $authorizationToken)
-    {
-        $this->authentication->setAuthorization($authorizationToken);
-
-        $token = $this->authentication->getAuthorization();
-
-        $this->assertEquals($authorizationToken, $token);
-    }
-
-    /**
-     * @depends testGetAuthenticationSuccess
-     * @param array $authorizationToken
-     */
-    public function testGetAuthorizationExpired(array $authorizationToken)
-    {
-        $authorizationToken['expires_in'] = 59;
-
-        $this->authentication->setAuthorization($authorizationToken);
-
-        $this->assertNull($this->authentication->getAuthorization());
-    }
-
-    /**
-     * @depends testGetAuthenticationSuccess
-     * @param array $authorizationToken
-     */
-    public function testGetAuthorizationToken(array $authorizationToken)
-    {
-        $this->authentication->setAuthorization($authorizationToken);
-
-        $token = $authorizationToken['token_type'] . ' ' . $authorizationToken['access_token'];
-
-        $this->assertStringContainsString($authorizationToken['token_type'], $this->authentication->getAuthorizationToken());
-        $this->assertStringContainsString($authorizationToken['access_token'], $this->authentication->getAuthorizationToken());
-        $this->assertEquals($token, $this->authentication->getAuthorizationToken());
     }
 }

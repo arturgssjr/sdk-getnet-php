@@ -2,10 +2,10 @@
 
 namespace Getnet\Api\Requests;
 
-use Getnet\Api\CardTokenization;
-use Getnet\Api\Exceptions\GetnetException;
+use Getnet\Api\Card;
+use Getnet\Api\TokenCard;
 
-class CardTokenizationRequest extends RequestAbstract
+class TokenCardRequest extends RequestAbstract
 {
     const URI = 'v1/tokens/card';
     const CONTENT_TYPE = 'application/json';
@@ -13,9 +13,9 @@ class CardTokenizationRequest extends RequestAbstract
     private $authorization;
 
     /**
-     * @var CardTokenization
+     * @var TokenCard
      */
-    private $cardTokenization;
+    private $tokenCard;
 
     public function getAuthorization()
     {
@@ -27,9 +27,9 @@ class CardTokenizationRequest extends RequestAbstract
         $this->authorization = $authorization;
     }
 
-    public function getCardToken($cardNumber, $customerId = null)
+    public function getTokenCard(Card $card)
     {
-        $this->cardTokenization = new CardTokenization($cardNumber, $customerId);
+        $this->tokenCard = new TokenCard($card);
 
         if (!$this->getAuthentication()->getAuthorization()) {
             (new AuthenticationRequest($this->getAuthentication(), $this->getEnvironment()))->getAuthorization();
@@ -38,7 +38,7 @@ class CardTokenizationRequest extends RequestAbstract
 
         $cardToken = $this->sendRequest(RequestAbstract::HTTP_POST);
 
-        return $this->cardTokenization->setTokenNumber($cardToken['number_token']);
+        return $this->tokenCard->setTokenNumber($cardToken['number_token']);
     }
 
     protected function _getUrl()
@@ -49,8 +49,8 @@ class CardTokenizationRequest extends RequestAbstract
     protected function _getContent()
     {
         return json_encode([
-            'card_number' => $this->cardTokenization->getCardNumber(),
-            'customer_id' => $this->cardTokenization->getCustomerId(),
+            'card_number' => $this->tokenCard->getCard()->getCardNumber(),
+            'customer_id' => $this->tokenCard->getCard()->getCustomer()->getCustomerId(),
         ]);
     }
 

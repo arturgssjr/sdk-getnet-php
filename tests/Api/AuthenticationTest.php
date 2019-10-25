@@ -26,18 +26,28 @@ class AuthenticationTest extends TestCase
         unset($this->authentication);
     }
 
-    public function testGetAuthenticationString()
+    public function testSetAndGetAuthorization()
     {
-        $sellerData = $this->data['seller'];
-        $authString = 'Basic ' . base64_encode("{$sellerData['client_id']}:{$sellerData['secret_id']}");
+        $this->authentication->setAuthorization($this->data['authorization']);
 
-        $this->assertEquals($authString, $this->authentication->getAuthentication());
+        self::assertNotNull($this->authentication->getAuthorization());
+        self::assertArrayHasKey('access_token', $this->authentication->getAuthorization());
+        self::assertArrayHasKey('token_type', $this->authentication->getAuthorization());
+        self::assertArrayHasKey('expires_in', $this->authentication->getAuthorization());
+        self::assertArrayHasKey('scope', $this->authentication->getAuthorization());
     }
 
-    public function testSetAndGetSeller()
+    public function testGetAuthenticationString()
     {
-        $this->authentication->setSeller($this->seller);
+        $authString = 'Basic ' . base64_encode("{$this->data['seller']['client_id']}:{$this->data['seller']['secret_id']}");
 
-        $this->assertEquals($this->seller, $this->authentication->getSeller());
+        self::assertEquals($authString, $this->authentication->getAuthString());
+    }
+
+    public function testGetSeller()
+    {
+        self::assertNotNull($this->authentication->getSeller());
+        self::assertEquals($this->seller, $this->authentication->getSeller());
+        self::assertInstanceOf(Seller::class, $this->authentication->getSeller());
     }
 }

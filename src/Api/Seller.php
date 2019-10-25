@@ -3,77 +3,74 @@ namespace Getnet\Api;
 
 class Seller
 {
-    private $client_id;
-    private $secret_id;
-    private $seller_id;
+    private $clientId;
+    private $secretId;
+    private $sellerId;
 
-    public function __construct($client_id, $secret_id, $seller_id)
+    /**
+     * Seller constructor.
+     * @param $clientId
+     * @param $secretId
+     * @param $sellerId
+     */
+    public function __construct($clientId, $secretId, $sellerId)
     {
-        $this->setClientId($client_id);
-        $this->setSecretId($secret_id);
-        $this->setSellerId($seller_id);
+        $this->clientId = $clientId;
+        $this->secretId = $secretId;
+        $this->sellerId = $sellerId;
     }
 
     /**
-     * Get the value of client_id
-     */ 
+     * @return mixed
+     */
     public function getClientId()
     {
-        return $this->client_id;
+        return $this->clientId;
     }
 
     /**
-     * Set the value of client_id
-     *
-     * @param $client_id
-     * @return  self
+     * @param mixed $clientId
+     * @return Seller
      */
-    public function setClientId($client_id)
+    public function setClientId($clientId)
     {
-        $this->client_id = $client_id;
-
+        $this->clientId = $clientId;
         return $this;
     }
 
     /**
-     * Get the value of secret_id
-     */ 
+     * @return mixed
+     */
     public function getSecretId()
     {
-        return $this->secret_id;
+        return $this->secretId;
     }
 
     /**
-     * Set the value of secret_id
-     *
-     * @param $secret_id
-     * @return  self
+     * @param mixed $secretId
+     * @return Seller
      */
-    public function setSecretId($secret_id)
+    public function setSecretId($secretId)
     {
-        $this->secret_id = $secret_id;
-
+        $this->secretId = $secretId;
         return $this;
     }
 
     /**
-     * Get the value of seller_id
-     */ 
+     * @return mixed
+     */
     public function getSellerId()
     {
-        return $this->seller_id;
+        return $this->sellerId;
     }
 
     /**
-     * Set the value of seller_id
-     *
-     * @param $seller_id
-     * @return  self
+     * @param mixed $sellerId
+     * @return Seller
      */
-    public function setSellerId($seller_id)
+    public function setSellerId($sellerId)
     {
-        $this->seller_id = $seller_id;
-
+        $this->sellerId = $sellerId;
         return $this;
     }
 }

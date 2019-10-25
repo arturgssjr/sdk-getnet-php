@@ -3,17 +3,20 @@
 namespace GetnetTests\Api\Requests;
 
 use Getnet\Api\Authentication;
+use Getnet\Api\Card;
+use Getnet\Api\Customer;
 use Getnet\Api\Environment;
-use Getnet\Api\Exceptions\GetnetException;
-use Getnet\Api\Requests\CardTokenizationRequest;
+use Getnet\Api\Requests\TokenCardRequest;
 use Getnet\Api\Seller;
 use PHPUnit\Framework\TestCase;
 use ReflectionObject;
 
-class CardTokenizationRequestTest extends TestCase
+class TokenCardRequestTest extends TestCase
 {
     private $data;
+    private $card;
     private $seller;
+    private $customer;
     private $environment;
     private $authentication;
 
@@ -23,29 +26,34 @@ class CardTokenizationRequestTest extends TestCase
         $this->environment = new Environment();
         $this->seller = new Seller($this->data['seller']['client_id'], $this->data['seller']['secret_id'], $this->data['seller']['seller_id']);
         $this->authentication = new Authentication($this->seller);
+        $this->customer = new Customer();
+        $this->customer->setCustomerId($this->data['customer']['customerId']);
+        $this->card = new Card($this->customer);
+        $this->card->setCardNumber($this->data['card']['cardNumber']);
     }
 
     protected function tearDown(): void
     {
         unset($this->data);
+        unset($this->card);
         unset($this->seller);
+        unset($this->customer);
         unset($this->authentication);
     }
 
-    public function testGetCardTokenSuccess()
+    public function testGetTokenCardSuccess()
     {
-        $testedClass = $this->getMockForAbstractClass(CardTokenizationRequest::class, [
+        $testedClass = $this->getMockForAbstractClass(TokenCardRequest::class, [
             $this->authentication,
             $this->environment,
         ]);
 
         $reflector = new ReflectionObject($testedClass);
 
-        $method = $reflector->getMethod('getCardToken');
+        $method = $reflector->getMethod('getTokenCard');
 
         $return = $method->invokeArgs($testedClass, [
-            $this->data['cardTokenization']['cardNumber'],
-            $this->data['cardTokenization']['customerId'],
+            $this->card,
         ]);
 
         $this->assertNotNull($return);

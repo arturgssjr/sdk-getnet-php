@@ -2,21 +2,16 @@
 
 namespace Getnet\Api\Requests;
 
-
-use Getnet\Api\Authentication;
-use Getnet\Api\Environment;
-
 class AuthenticationRequest extends RequestAbstract
 {
     const URI = 'auth/oauth/v2/token';
     const SCOPE = 'oob';
     const GRANT_TYPE = 'client_credentials';
     const CONTENT_TYPE = 'application/x-www-form-urlencoded';
-    const SECURITY_TIME = 60;
 
     public function getAuthorization()
     {
-        if (!$this->getAuthentication()->getAuthorizationToken()) {
+        if (!$this->getAuthentication()->getAuthorization()) {
             $authorization = $this->sendRequest(RequestAbstract::HTTP_POST);
 
             $this->getAuthentication()->setAuthorization($authorization);
@@ -44,7 +39,7 @@ class AuthenticationRequest extends RequestAbstract
     {
         return [
             'Content-Type' => self::CONTENT_TYPE,
-            'Authorization' => $this->getAuthentication()->getAuthentication(),
+            'Authorization' => $this->getAuthentication()->getAuthString(),
         ];
     }
 }

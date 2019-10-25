@@ -24,31 +24,24 @@ abstract class RequestAbstract
 
     public function __construct(Authentication $authentication, Environment $environment)
     {
-        $this->setEnvironment($environment);
-        $this->setAuthentication($authentication);
-    }
-
-
-    public function getEnvironment()
-    {
-        return $this->environment;
-    }
-
-    public function setEnvironment(Environment $environment)
-    {
         $this->environment = $environment;
-        return $this;
+        $this->authentication = $authentication;
     }
 
-    public function getAuthentication()
+    /**
+     * @return Authentication
+     */
+    public function getAuthentication(): Authentication
     {
         return $this->authentication;
     }
 
-    public function setAuthentication(Authentication $authentication)
+    /**
+     * @return Environment
+     */
+    public function getEnvironment(): Environment
     {
-        $this->authentication = $authentication;
-        return $this;
+        return $this->environment;
     }
 
     protected function sendRequest($method, $url = '', $content = NULL, array $headers = [])
