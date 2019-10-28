@@ -10,22 +10,10 @@ class TokenCardRequest extends RequestAbstract
     const URI = 'v1/tokens/card';
     const CONTENT_TYPE = 'application/json';
 
-    private $authorization;
-
     /**
      * @var TokenCard
      */
     private $tokenCard;
-
-    public function getAuthorization()
-    {
-        return $this->authorization;
-    }
-
-    public function setAuthorization($authorization)
-    {
-        $this->authorization = $authorization;
-    }
 
     public function getTokenCard(Card $card)
     {
@@ -33,7 +21,6 @@ class TokenCardRequest extends RequestAbstract
 
         if (!$this->getAuthentication()->getAuthorization()) {
             (new AuthenticationRequest($this->getAuthentication(), $this->getEnvironment()))->getAuthorization();
-            $this->setAuthorization($this->getAuthentication()->getAuthorizationToken());
         }
 
         $cardToken = $this->sendRequest(RequestAbstract::HTTP_POST);
@@ -58,7 +45,7 @@ class TokenCardRequest extends RequestAbstract
     {
         return [
             'Content-Type' => self::CONTENT_TYPE,
-            'Authorization' => $this->getAuthorization(),
+            'Authorization' => $this->getAuthentication()->getAuthorizationToken(),
             'seller_id' => $this->getAuthentication()->getSeller()->getSellerId(),
         ];
     }
