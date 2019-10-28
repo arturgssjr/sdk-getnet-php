@@ -47,4 +47,11 @@ return [
         'country' => 'Brasil',
         'postalCode' => '90230060'
     ],
+    'authorization' => [
+        'access_token' => 'ca22a2ge-1914-4b0c-a0fb-d3ce0fde7346',
+        'token_type' => 'Bearer',
+        'expires_in' => 3600,
+        'scope' => 'oob',
+        'statusCode' => 200,
+    ],
 ];
