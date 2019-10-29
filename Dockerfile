@@ -16,6 +16,11 @@ RUN apt-get update && \
     libfreetype6-dev \
     libssl-dev \
     libmcrypt-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    && docker-php-ext-configure zip --with-libzip \
+    && docker-php-ext-install zip \
     && rm -rf /var/lib/apt/lists/*
 
 # Configuração XDebug
