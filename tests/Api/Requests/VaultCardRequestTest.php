@@ -91,6 +91,23 @@ class VaultCardRequestTest extends TestCase
         $this->assertEquals(128, strlen($return->getTokenCard()->getTokenNumber()));    
     }
 
+    public function testGetVaultCard()
+    {
+        $testedClass = $this->getMockForAbstractClass(VaultCardRequest::class, [
+            $this->authentication,
+            $this->environment,
+        ]);
+
+        $reflector = new ReflectionObject($testedClass);
+
+        $method = $reflector->getMethod('getVaultCard');
+
+        $return = $method->invokeArgs($testedClass, [
+            $this->data['customer']['customerId']
+        ]);
+
+    }
+
     private function getTokenCard()
     {
         $testedClass = $this->getMockForAbstractClass(TokenCardRequest::class, [

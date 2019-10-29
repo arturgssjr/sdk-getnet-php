@@ -46,12 +46,9 @@ class RequestAbstractTest extends TestCase
         $sendRequest = $reflector->getMethod('sendRequest');
         $sendRequest->setAccessible(true);
 
-        $return = $sendRequest->invokeArgs(
-            $testedClass, [
-                RequestAbstract::HTTP_GET,
-                'http://viacep.com.br/ws/74915380/json/',
-            ]
-        );
+        $return = $sendRequest->invokeArgs($testedClass, [
+            RequestAbstract::HTTP_GET
+        ]);
 
         $this->assertIsArray($return);
         $this->assertEquals(200, $return['statusCode']);
@@ -73,12 +70,9 @@ class RequestAbstractTest extends TestCase
         $sendRequest = $reflector->getMethod('sendRequest');
         $sendRequest->setAccessible(true);
 
-        $sendRequest->invokeArgs(
-            $testedClass, [
-                RequestAbstract::HTTP_GET,
-                '',
-            ]
-        );
+        $sendRequest->invokeArgs($testedClass, [
+            RequestAbstract::HTTP_GET
+        ]);
     }
 
 }

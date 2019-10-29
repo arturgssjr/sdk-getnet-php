@@ -8,6 +8,7 @@ use Getnet\Api\Helpers\CurlUtil;
 use Getnet\Api\Helpers\JsonUtil;
 use Getnet\Api\Helpers\ArrayUtil;
 use Getnet\Api\Exceptions\GetnetException;
+use Getnet\Api\Requests\AuthenticationRequest;
 
 abstract class RequestAbstract
 {
@@ -21,6 +22,10 @@ abstract class RequestAbstract
 
     private $environment;
     private $authentication;
+
+    private $url;
+    private $headers;
+    private $content;
 
     public function __construct(Authentication $authentication, Environment $environment)
     {
@@ -44,18 +49,14 @@ abstract class RequestAbstract
         return $this->environment;
     }
 
-    protected function sendRequest($method, $url = '', $content = NULL, array $headers = [])
+    protected function sendRequest($method)
     {
-        $url = empty($url) ? $this->_getUrl() : $url;
-        $content = empty($content) ? $this->_getContent() : $content;
-        $headers = empty($headers) ? $this->_getHeader() : $headers;
-
         $curl = curl_init();
 
-        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_URL, $this->getUrl());
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $content);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ArrayUtil::convertArrayToHeader($headers));
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $this->getContent());
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getHeaders());
         curl_setopt($curl, CURLOPT_ENCODING, '');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
@@ -88,18 +89,70 @@ abstract class RequestAbstract
         }
     }
 
-    protected function _getUrl()
+    protected function _getAuthorization()
     {
-        return '';
+        if (!$this->getAuthentication()->getAuthorization()) {
+            (new AuthenticationRequest($this->getAuthentication(), $this->getEnvironment()))->getAuthorization();
+        }
     }
 
-    protected function _getContent()
+    /**
+     * Get the value of url
+     */ 
+    protected function getUrl()
     {
-        return [];
+        return $this->url;
     }
 
-    protected function _getHeader()
+    /**
+     * Set the value of url
+     *
+     * @return  self
+     */ 
+    protected function setUrl($url)
     {
-        return [];
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of headers
+     */ 
+    protected function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Set the value of headers
+     *
+     * @return  self
+     */ 
+    protected function setHeaders($headers)
+    {
+        $this->headers = ArrayUtil::convertArrayToHeader($headers);
+
+        return $this;
+    }
+
+    /**
+     * Get the value of content
+     */ 
+    protected function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * Set the value of content
+     *
+     * @return  self
+     */ 
+    protected function setContent($content)
+    {
+        $this->content = $content;
+
+        return $this;
     }
 }

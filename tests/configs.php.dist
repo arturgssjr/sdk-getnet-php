@@ -55,5 +55,10 @@ return [
         'cardId' => 'e8ad2ae4-9e3e-4532-998f-1a5a11e56e58',
         'numberToken' => 'dfe05208b105578c070f806c80abd3af09e246827d29b866cf4ce16c205849977c9496cbf0d0234f42339937f327747075f68763537b90b31389e01231d4d13c',
         'verifyCard'=> false,
+        'status' => [
+            'all' => VaultCard::STATUS_ALL,
+            'active' => VaultCard::STATUS_ACTIVE,
+            'renewed' => VaultCard::STATUS_RENEWED,
+        ],
     ],
 ];

@@ -12,6 +12,20 @@ class AuthenticationRequest extends RequestAbstract
     public function getAuthorization()
     {
         if (!$this->getAuthentication()->getAuthorization()) {
+            $this->setUrl($this->getEnvironment()->getUrl() . self::URI);
+            
+            $this->setContent(
+                http_build_query([
+                    'scope' => self::SCOPE,
+                    'grant_type' => self::GRANT_TYPE
+                ])
+            );
+
+            $this->setHeaders([
+                'Content-Type' => self::CONTENT_TYPE,
+                'Authorization' => $this->getAuthentication()->getAuthString(),
+            ]);
+
             $authorization = $this->sendRequest(RequestAbstract::HTTP_POST);
 
             $this->getAuthentication()->setAuthorization($authorization);
@@ -20,26 +34,5 @@ class AuthenticationRequest extends RequestAbstract
         } else {
             return $this->getAuthentication()->getAuthorization();
         }
-    }
-
-    protected function _getUrl()
-    {
-        return $this->getEnvironment()->getUrl() . self::URI;
-    }
-
-    protected function _getContent()
-    {
-        return http_build_query([
-            'scope' => self::SCOPE,
-            'grant_type' => self::GRANT_TYPE
-        ]);
-    }
-
-    protected function _getHeader()
-    {
-        return [
-            'Content-Type' => self::CONTENT_TYPE,
-            'Authorization' => $this->getAuthentication()->getAuthString(),
-        ];
     }
 }
