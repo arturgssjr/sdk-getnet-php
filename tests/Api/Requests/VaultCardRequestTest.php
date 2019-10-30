@@ -6,11 +6,13 @@ use ReflectionObject;
 use Getnet\Api\Seller;
 use Getnet\Api\Customer;
 use Getnet\Api\TokenCard;
+use Getnet\Api\VaultCard;
 use Getnet\Api\Environment;
 use Getnet\Api\Authentication;
 use PHPUnit\Framework\TestCase;
 use Getnet\Api\Requests\TokenCardRequest;
 use Getnet\Api\Requests\VaultCardRequest;
+use Getnet\Api\Exceptions\GetnetException;
 
 class VaultCardRequestTest extends TestCase
 {
@@ -34,6 +36,7 @@ class VaultCardRequestTest extends TestCase
         $this->card->setCardNumber($this->data['card']['cardNumber']);
         $this->card->setExpirationMonth($this->data['card']['expirationMonth']);
         $this->card->setExpirationYear($this->data['card']['expirationYear']);
+        $this->vaultCard = new VaultCard();
     }
 
     protected function tearDown(): void
@@ -42,6 +45,7 @@ class VaultCardRequestTest extends TestCase
         unset($this->card);
         unset($this->seller);
         unset($this->customer);
+        unset($this->vaultCard);
         unset($this->environment);
         unset($this->authentication);
     }
@@ -49,22 +53,27 @@ class VaultCardRequestTest extends TestCase
     public function testPostVaultCard()
     {
         $testedClass = $this->getMockForAbstractClass(VaultCardRequest::class, [
+            $this->vaultCard,
             $this->authentication,
             $this->environment,
         ]);
 
         $reflector = new ReflectionObject($testedClass);
 
-        $method = $reflector->getMethod('postVaultCard');
+        $postVaultCard = $reflector->getMethod('postVaultCard');
 
-        $return = $method->invokeArgs($testedClass, [
+        $return = $postVaultCard->invokeArgs($testedClass, [
             $this->getTokenCard(),
         ]);
 
-        $this->assertNotNull($return);
-        $this->assertObjectHasAttribute('cardId', $return);
-        $this->assertEquals(36, strlen($return->getCardId()));
-        $this->assertEquals(128, strlen($return->getTokenCard()->getTokenNumber()));
+        self::assertNotNull($return);
+        self::assertArrayHasKey('card_id', $return);
+        self::assertArrayHasKey('number_token', $return);
+        self::assertEquals(201, $return['statusCode']);
+        self::assertEquals(36, strlen($return['card_id']));
+        self::assertEquals(128, strlen($return['number_token']));
+
+        return $return['card_id'];
     }
 
     public function testPostVaultCardNewAccessToken()
@@ -73,39 +82,120 @@ class VaultCardRequestTest extends TestCase
         $authentication->setAuthorization([]);
 
         $testedClass = $this->getMockForAbstractClass(VaultCardRequest::class, [
+            $this->vaultCard,
             $authentication,
             $this->environment,
         ]);
 
         $reflector = new ReflectionObject($testedClass);
 
-        $method = $reflector->getMethod('postVaultCard');
+        $postVaultCard = $reflector->getMethod('postVaultCard');
 
-        $return = $method->invokeArgs($testedClass, [
+        $return = $postVaultCard->invokeArgs($testedClass, [
             $this->getTokenCard(),
         ]);
 
-        $this->assertNotNull($return);
-        $this->assertObjectHasAttribute('cardId', $return);
-        $this->assertEquals(36, strlen($return->getCardId()));
-        $this->assertEquals(128, strlen($return->getTokenCard()->getTokenNumber()));    
+        self::assertNotNull($return);
+        self::assertArrayHasKey('card_id', $return);
+        self::assertArrayHasKey('number_token', $return);
+        self::assertEquals(201, $return['statusCode']);
+        self::assertEquals(36, strlen($return['card_id']));
+        self::assertEquals(128, strlen($return['number_token']));
     }
 
     public function testGetVaultCard()
     {
         $testedClass = $this->getMockForAbstractClass(VaultCardRequest::class, [
+            $this->vaultCard,
             $this->authentication,
             $this->environment,
         ]);
 
         $reflector = new ReflectionObject($testedClass);
 
-        $method = $reflector->getMethod('getVaultCard');
+        $getVaultCard = $reflector->getMethod('getVaultCard');
 
-        $return = $method->invokeArgs($testedClass, [
+        $return = $getVaultCard->invokeArgs($testedClass, [
             $this->data['customer']['customerId']
         ]);
 
+        self::assertNotNull($return);
+        self::assertIsArray($return->getCards());
+        self::assertCount(1, $return->getCards());
+        self::assertInstanceOf(VaultCard::class, $return);
+    }
+
+    public function testGetVaultCardStatus()
+    {
+        $testedClass = $this->getMockForAbstractClass(VaultCardRequest::class, [
+            $this->vaultCard,
+            $this->authentication,
+            $this->environment,
+        ]);
+
+        $reflector = new ReflectionObject($testedClass);
+
+        $getVaultCard = $reflector->getMethod('getVaultCard');
+
+        $return = $getVaultCard->invokeArgs($testedClass, [
+            $this->data['customer']['customerId'],
+            $this->data['vaultCardRequest']['status']['active'],
+        ]);
+
+        self::assertNotNull($return);
+        self::assertIsArray($return->getCards());
+        self::assertCount(1, $return->getCards());
+        self::assertArrayHasKey('status', $return->getCards()[0]);
+        self::assertInstanceOf(VaultCard::class, $return);
+    }
+
+    public function testGetVaultCardCustomerIdEmpty()
+    {
+        $this->expectException(GetnetException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('Customer ID required.');
+
+        $testedClass = $this->getMockForAbstractClass(VaultCardRequest::class, [
+            $this->vaultCard,
+            $this->authentication,
+            $this->environment,
+        ]);
+
+        $reflector = new ReflectionObject($testedClass);
+
+        $getVaultCard = $reflector->getMethod('getVaultCard');
+
+        $getVaultCard->invokeArgs($testedClass, [
+            '',
+            $this->data['vaultCardRequest']['status']['all'],
+        ]);
+    }
+
+    /**
+     * @depends testPostVaultCard
+     */
+    public function testGetVaultCardId($cardId)
+    {
+        $testedClass = $this->getMockForAbstractClass(VaultCardRequest::class, [
+            $this->vaultCard,
+            $this->authentication,
+            $this->environment,
+        ]);
+
+        $reflector = new ReflectionObject($testedClass);
+
+        $getVaultCard = $reflector->getMethod('getVaultCard');
+
+        $return = $getVaultCard->invokeArgs($testedClass, [
+            '',
+            '',
+            $cardId,
+        ]);
+
+        self::assertNotNull($return);
+        self::assertIsArray($return->getCards());
+        self::assertEquals($cardId, $return->getCards()['card_id']);
+        self::assertInstanceOf(VaultCard::class, $return);
     }
 
     private function getTokenCard()

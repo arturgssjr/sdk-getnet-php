@@ -2,13 +2,14 @@
 
 namespace GetnetTests\Api\Requests;
 
-use Getnet\Api\Authentication;
-use Getnet\Api\Environment;
-use Getnet\Api\Exceptions\GetnetException;
-use Getnet\Api\Requests\RequestAbstract;
-use Getnet\Api\Seller;
-use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use ReflectionObject;
+use Getnet\Api\Seller;
+use Getnet\Api\Environment;
+use Getnet\Api\Authentication;
+use PHPUnit\Framework\TestCase;
+use Getnet\Api\Requests\RequestAbstract;
+use Getnet\Api\Exceptions\GetnetException;
 
 class RequestAbstractTest extends TestCase
 {
@@ -46,12 +47,17 @@ class RequestAbstractTest extends TestCase
         $sendRequest = $reflector->getMethod('sendRequest');
         $sendRequest->setAccessible(true);
 
+        $setUrl = $reflector->getMethod('setUrl');
+        $setUrl->setAccessible(true);
+        $setUrl->invokeArgs($testedClass, ['https://viacep.com.br/ws/74915380/json']);
+
         $return = $sendRequest->invokeArgs($testedClass, [
             RequestAbstract::HTTP_GET
         ]);
 
-        $this->assertIsArray($return);
-        $this->assertEquals(200, $return['statusCode']);
+        self::assertIsArray($return);
+        self::assertNotNull($return);
+        self::assertEquals(200, $return['statusCode']);
     }
 
     public function testSendRequestCurlError()
@@ -69,6 +75,10 @@ class RequestAbstractTest extends TestCase
 
         $sendRequest = $reflector->getMethod('sendRequest');
         $sendRequest->setAccessible(true);
+
+        $setUrl = $reflector->getMethod('setUrl');
+        $setUrl->setAccessible(true);
+        $setUrl->invokeArgs($testedClass, ['']);
 
         $sendRequest->invokeArgs($testedClass, [
             RequestAbstract::HTTP_GET

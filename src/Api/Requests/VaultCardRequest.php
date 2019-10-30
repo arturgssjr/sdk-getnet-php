@@ -4,6 +4,9 @@ namespace Getnet\Api\Requests;
 use Getnet\Api\Customer;
 use Getnet\Api\TokenCard;
 use Getnet\Api\VaultCard;
+use Getnet\Api\Environment;
+use Getnet\Api\Authentication;
+use Getnet\Api\Exceptions\GetnetException;
 
 class VaultCardRequest extends RequestAbstract
 {
@@ -18,13 +21,20 @@ class VaultCardRequest extends RequestAbstract
      */
     private $vaultCard;
 
+    public function __construct(VaultCard $vaultCard, Authentication $authentication, Environment $environment)
+    {
+        parent::__construct($authentication, $environment);
+        $this->vaultCard = $vaultCard;
+    }
+
     public function postVaultCard(TokenCard $tokenCard)
     {
-        $this->vaultCard = new VaultCard($tokenCard);
-        
         $this->_getAuthorization();
 
+        $this->vaultCard->setTokenCard($tokenCard);
+
         $this->setUrl($this->getEnvironment()->getUrl() . self::URI);
+
         $this->setContent(
             json_encode([
                 'number_token' => $this->vaultCard->getTokenCard()->getTokenNumber(),
@@ -38,6 +48,7 @@ class VaultCardRequest extends RequestAbstract
                 'security_code' => $this->vaultCard->getTokenCard()->getCard()->getSecurityCode(),
             ])
         );
+
         $this->setHeaders([
             'Content-Type' => self::CONTENT_TYPE,
             'Authorization' => $this->getAuthentication()->getAuthorizationToken(),
@@ -46,36 +57,46 @@ class VaultCardRequest extends RequestAbstract
 
         $cardVault = $this->sendRequest(RequestAbstract::HTTP_POST);
         
-        return $this->vaultCard->setCardId($cardVault['card_id']);
+        return $cardVault;
     }
 
     public function getVaultCard(string $customerId = '', string $status = '', string $cardId = '')
     {
         $this->_getAuthorization();
 
-        if (!empty($cardId)) {
-            $this->setUrl($this->getEnvironment()->getUrl() . self::URI . DIRECTORY_SEPARATOR . $cardId);
+        if (empty($customerId) && !empty($status)) {
+            throw new GetnetException('Customer ID required.', 400);
         }
 
         if (!empty($customerId) && !empty($status)) {
             $this->setUrl($this->getEnvironment()->getUrl() . self::URI . '?' . http_build_query([
                 'customer_id' => $customerId,
-                'status' => $status
+                'status' => $status,
             ]));
-        }
-
-        if (!empty($customerId)) {
+        } 
+        
+        if (!empty($customerId) && empty($status)) {
             $this->setUrl($this->getEnvironment()->getUrl() . self::URI . '?' . http_build_query([
                 'customer_id' => $customerId,
             ]));
+        }
+
+        if (!empty($cardId)) {
+            $this->setUrl($this->getEnvironment()->getUrl() . self::URI . DIRECTORY_SEPARATOR . $cardId);
         }
 
         $this->setHeaders([
             'Authorization' => $this->getAuthentication()->getAuthorizationToken(),
             'seller_id' => $this->getAuthentication()->getSeller()->getSellerId(),
         ]);
-
+        
         $cardVault = $this->sendRequest(RequestAbstract::HTTP_GET);
+
+        if (array_key_exists('cards', $cardVault)) {
+            return $this->vaultCard->setCards($cardVault['cards']);
+        }
+
+        return $this->vaultCard->setCards($cardVault);
     }
 
 }

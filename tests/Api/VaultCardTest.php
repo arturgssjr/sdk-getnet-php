@@ -33,15 +33,17 @@ class VaultCardTest extends TestCase
         unset($this->vaultCard);
     }
 
-    public function testSetAndGetCardId()
+    public function testSetAndGetCard()
     {
-        $this->vaultCard->setCardId($this->data['vaultCard']['cardId']);
+        $this->vaultCard->setCards($this->data['vaultCard']['cards']);
 
-        self::assertEquals($this->data['vaultCard']['cardId'], $this->vaultCard->getCardId());
+        self::assertEquals($this->data['vaultCard']['cards'], $this->vaultCard->getCards());
     }
 
-    public function testGetTokenCard()
+    public function testSetAndGetTokenCard()
     {
+        $this->vaultCard->setTokenCard($this->tokenCard);
+
         self::assertNotNull($this->vaultCard->getTokenCard());
         self::assertInstanceOf(TokenCard::class, $this->vaultCard->getTokenCard());     
     }

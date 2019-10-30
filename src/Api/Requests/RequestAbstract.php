@@ -55,8 +55,8 @@ abstract class RequestAbstract
 
         curl_setopt($curl, CURLOPT_URL, $this->getUrl());
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $this->getContent());
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getHeaders());
+        empty($this->getContent()) ?: curl_setopt($curl, CURLOPT_POSTFIELDS, $this->getContent());
+        empty($this->getHeaders()) ?: curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getHeaders());
         curl_setopt($curl, CURLOPT_ENCODING, '');
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 

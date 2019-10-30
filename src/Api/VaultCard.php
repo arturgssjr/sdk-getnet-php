@@ -3,33 +3,28 @@ namespace Getnet\Api;
 
 class VaultCard
 {
-    private $cardId;
+    private $cards;
     /**
      * @var TokenCard
      */
     private $tokenCard;
 
-    public function __construct(TokenCard $tokenCard)
-    {
-        $this->tokenCard = $tokenCard;
-    }
-
     /**
-     * Get the value of cardId
+     * Get the value of card
      */ 
-    public function getCardId()
+    public function getCards()
     {
-        return $this->cardId;
+        return $this->cards;
     }
 
     /**
-     * Set the value of cardId
+     * Set the value of card
      *
      * @return  self
      */ 
-    public function setCardId($cardId)
+    public function setCards($cards)
     {
-        $this->cardId = $cardId;
+        $this->cards = $cards;
 
         return $this;
     }
@@ -42,5 +37,19 @@ class VaultCard
     public function getTokenCard()
     {
         return $this->tokenCard;
+    }
+
+    /**
+     * Set the value of tokenCard
+     *
+     * @param  TokenCard  $tokenCard
+     *
+     * @return  self
+     */ 
+    public function setTokenCard(TokenCard $tokenCard)
+    {
+        $this->tokenCard = $tokenCard;
+
+        return $this;
     }
 }

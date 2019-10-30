@@ -50,9 +50,9 @@ class TokenCardRequestTest extends TestCase
 
         $reflector = new ReflectionObject($testedClass);
 
-        $method = $reflector->getMethod('getTokenCard');
+        $getTokenCard = $reflector->getMethod('getTokenCard');
 
-        $return = $method->invokeArgs($testedClass, [
+        $return = $getTokenCard->invokeArgs($testedClass, [
             $this->card,
         ]);
 

@@ -19,6 +19,8 @@ class TokenCardRequest extends RequestAbstract
     {
         $this->tokenCard = new TokenCard($card);
 
+        $this->_getAuthorization();
+
         $this->setUrl($this->getEnvironment()->getUrl() . self::URI);
 
         $this->setContent(
@@ -33,8 +35,6 @@ class TokenCardRequest extends RequestAbstract
             'Authorization' => $this->getAuthentication()->getAuthorizationToken(),
             'seller_id' => $this->getAuthentication()->getSeller()->getSellerId(),
         ]);
-
-        $this->_getAuthorization();
 
         $cardToken = $this->sendRequest(RequestAbstract::HTTP_POST);
 
