@@ -4,9 +4,9 @@ namespace Getnet\Api\Requests;
 
 use Getnet\Api\Environment;
 use Getnet\Api\Authentication;
-use Getnet\Api\Helpers\CurlUtil;
-use Getnet\Api\Helpers\JsonUtil;
-use Getnet\Api\Helpers\ArrayUtil;
+use Getnet\Api\Utils\CurlUtil;
+use Getnet\Api\Utils\JsonUtil;
+use Getnet\Api\Utils\ArrayUtil;
 use Getnet\Api\Exceptions\GetnetException;
 use Getnet\Api\Requests\AuthenticationRequest;
 
@@ -24,6 +24,7 @@ abstract class RequestAbstract
     private $authentication;
 
     private $url;
+    private $method = self::HTTP_GET;
     private $headers;
     private $content;
 
@@ -49,12 +50,12 @@ abstract class RequestAbstract
         return $this->environment;
     }
 
-    protected function sendRequest($method)
+    protected function sendRequest()
     {
         $curl = curl_init();
 
         curl_setopt($curl, CURLOPT_URL, $this->getUrl());
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $this->getMethod());
         empty($this->getContent()) ?: curl_setopt($curl, CURLOPT_POSTFIELDS, $this->getContent());
         empty($this->getHeaders()) ?: curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getHeaders());
         curl_setopt($curl, CURLOPT_ENCODING, '');
@@ -82,6 +83,8 @@ abstract class RequestAbstract
             case 202 :
                 $unserialized['statusCode'] = $statusCode;
                 return $unserialized;
+            case 204 :
+                return $statusCode;
             default:
                 $message = (is_array($unserialized) ? (isset($unserialized['error_description']) ? $unserialized['error_description'] : $unserialized['message']) : $unserialized);
                 $details = (isset($unserialized['details']) ? $unserialized['details'] : []);
@@ -152,6 +155,26 @@ abstract class RequestAbstract
     protected function setContent($content)
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of method
+     */ 
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
+    /**
+     * Set the value of method
+     *
+     * @return  self
+     */ 
+    public function setMethod($method)
+    {
+        $this->method = $method;
 
         return $this;
     }

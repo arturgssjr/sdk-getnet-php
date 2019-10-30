@@ -198,6 +198,28 @@ class VaultCardRequestTest extends TestCase
         self::assertInstanceOf(VaultCard::class, $return);
     }
 
+    /**
+     * @depends testPostVaultCard
+     */
+    public function testDeleteVaultCardId($cardId)
+    {
+        $testedClass = $this->getMockForAbstractClass(VaultCardRequest::class, [
+            $this->vaultCard,
+            $this->authentication,
+            $this->environment,
+        ]);
+
+        $reflector = new ReflectionObject($testedClass);
+
+        $deleteVaultCard = $reflector->getMethod('deleteVaultCard');
+
+        $return = $deleteVaultCard->invokeArgs($testedClass, [
+            $cardId,
+        ]);
+
+        self::assertEquals(204, $return);
+    }
+
     private function getTokenCard()
     {
         $testedClass = $this->getMockForAbstractClass(TokenCardRequest::class, [

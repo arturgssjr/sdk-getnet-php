@@ -1,5 +1,5 @@
 <?php
-namespace Getnet\Api\Helpers;
+namespace Getnet\Api\Utils;
 
 class CurlUtil {
 

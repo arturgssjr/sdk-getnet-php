@@ -24,6 +24,8 @@
             <directory suffix=".php">./src/</directory>
             <exclude>
                 <directory suffix=".php">./vendor/</directory>
+                <directory suffix=".php">./src/Helpers/</directory>
+                <directory suffix=".php">./src/Api/Utils/</directory>
             </exclude>
         </whitelist>
     </filter>

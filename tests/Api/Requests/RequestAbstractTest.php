@@ -51,9 +51,7 @@ class RequestAbstractTest extends TestCase
         $setUrl->setAccessible(true);
         $setUrl->invokeArgs($testedClass, ['https://viacep.com.br/ws/74915380/json']);
 
-        $return = $sendRequest->invokeArgs($testedClass, [
-            RequestAbstract::HTTP_GET
-        ]);
+        $return = $sendRequest->invoke($testedClass);
 
         self::assertIsArray($return);
         self::assertNotNull($return);
@@ -80,9 +78,7 @@ class RequestAbstractTest extends TestCase
         $setUrl->setAccessible(true);
         $setUrl->invokeArgs($testedClass, ['']);
 
-        $sendRequest->invokeArgs($testedClass, [
-            RequestAbstract::HTTP_GET
-        ]);
+        $sendRequest->invoke($testedClass);
     }
 
 }

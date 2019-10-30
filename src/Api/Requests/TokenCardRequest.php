@@ -21,22 +21,21 @@ class TokenCardRequest extends RequestAbstract
 
         $this->_getAuthorization();
 
-        $this->setUrl($this->getEnvironment()->getUrl() . self::URI);
+        $this->setMethod(RequestAbstract::HTTP_POST)
+            ->setUrl($this->getEnvironment()->getUrl() . self::URI)
+            ->setContent(
+                json_encode([
+                    'card_number' => $this->tokenCard->getCard()->getCardNumber(),
+                    'customer_id' => $this->tokenCard->getCard()->getCustomer()->getCustomerId(),
+                ])
+            )
+            ->setHeaders([
+                'Content-Type' => self::CONTENT_TYPE,
+                'Authorization' => $this->getAuthentication()->getAuthorizationToken(),
+                'seller_id' => $this->getAuthentication()->getSeller()->getSellerId(),
+            ]);
 
-        $this->setContent(
-            json_encode([
-                'card_number' => $this->tokenCard->getCard()->getCardNumber(),
-                'customer_id' => $this->tokenCard->getCard()->getCustomer()->getCustomerId(),
-            ])
-        );
-
-        $this->setHeaders([
-            'Content-Type' => self::CONTENT_TYPE,
-            'Authorization' => $this->getAuthentication()->getAuthorizationToken(),
-            'seller_id' => $this->getAuthentication()->getSeller()->getSellerId(),
-        ]);
-
-        $cardToken = $this->sendRequest(RequestAbstract::HTTP_POST);
+        $cardToken = $this->sendRequest();
 
         return $this->tokenCard->setTokenNumber($cardToken['number_token']);
     }

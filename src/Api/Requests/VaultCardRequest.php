@@ -33,29 +33,28 @@ class VaultCardRequest extends RequestAbstract
 
         $this->vaultCard->setTokenCard($tokenCard);
 
-        $this->setUrl($this->getEnvironment()->getUrl() . self::URI);
+        $this->setMethod(RequestAbstract::HTTP_POST)
+            ->setUrl($this->getEnvironment()->getUrl() . self::URI)
+            ->setContent(
+                json_encode([
+                    'number_token' => $this->vaultCard->getTokenCard()->getTokenNumber(),
+                    'brand' => $this->vaultCard->getTokenCard()->getCard()->getBrand(),
+                    'cardholder_name' => $this->vaultCard->getTokenCard()->getCard()->getCardholderName(),
+                    'expiration_month' => $this->vaultCard->getTokenCard()->getCard()->getExpirationMonth(),
+                    'expiration_year' => $this->vaultCard->getTokenCard()->getCard()->getExpirationYear(),
+                    'customer_id' => $this->vaultCard->getTokenCard()->getCard()->getCustomer()->getCustomerId(),
+                    'cardholder_identification' => $this->vaultCard->getTokenCard()->getCard()->getCardholderIdentification(),
+                    'verify_card' => false, //refatorar
+                    'security_code' => $this->vaultCard->getTokenCard()->getCard()->getSecurityCode(),
+                ])
+            )
+            ->setHeaders([
+                'Content-Type' => self::CONTENT_TYPE,
+                'Authorization' => $this->getAuthentication()->getAuthorizationToken(),
+                'seller_id' => $this->getAuthentication()->getSeller()->getSellerId(),
+            ]);
 
-        $this->setContent(
-            json_encode([
-                'number_token' => $this->vaultCard->getTokenCard()->getTokenNumber(),
-                'brand' => $this->vaultCard->getTokenCard()->getCard()->getBrand(),
-                'cardholder_name' => $this->vaultCard->getTokenCard()->getCard()->getCardholderName(),
-                'expiration_month' => $this->vaultCard->getTokenCard()->getCard()->getExpirationMonth(),
-                'expiration_year' => $this->vaultCard->getTokenCard()->getCard()->getExpirationYear(),
-                'customer_id' => $this->vaultCard->getTokenCard()->getCard()->getCustomer()->getCustomerId(),
-                'cardholder_identification' => $this->vaultCard->getTokenCard()->getCard()->getCardholderIdentification(),
-                'verify_card' => false, //refatorar
-                'security_code' => $this->vaultCard->getTokenCard()->getCard()->getSecurityCode(),
-            ])
-        );
-
-        $this->setHeaders([
-            'Content-Type' => self::CONTENT_TYPE,
-            'Authorization' => $this->getAuthentication()->getAuthorizationToken(),
-            'seller_id' => $this->getAuthentication()->getSeller()->getSellerId(),
-        ]);
-
-        $cardVault = $this->sendRequest(RequestAbstract::HTTP_POST);
+        $cardVault = $this->sendRequest();
         
         return $cardVault;
     }
@@ -90,13 +89,27 @@ class VaultCardRequest extends RequestAbstract
             'seller_id' => $this->getAuthentication()->getSeller()->getSellerId(),
         ]);
         
-        $cardVault = $this->sendRequest(RequestAbstract::HTTP_GET);
+        $cardVault = $this->sendRequest();
 
         if (array_key_exists('cards', $cardVault)) {
             return $this->vaultCard->setCards($cardVault['cards']);
         }
 
         return $this->vaultCard->setCards($cardVault);
+    }
+
+    public function deleteVaultCard(string $cardId)
+    {
+        $this->_getAuthorization();
+
+        $this->setMethod(RequestAbstract::HTTP_DELETE)
+            ->setUrl($this->getEnvironment()->getUrl() . self::URI . DIRECTORY_SEPARATOR . $cardId)
+            ->setHeaders([
+                'Authorization' => $this->getAuthentication()->getAuthorizationToken(),
+                'seller_id' => $this->getAuthentication()->getSeller()->getSellerId(),
+            ]);
+
+        return $this->sendRequest();
     }
 
 }

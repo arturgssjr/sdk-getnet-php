@@ -12,21 +12,20 @@ class AuthenticationRequest extends RequestAbstract
     public function getAuthorization()
     {
         if (!$this->getAuthentication()->getAuthorization()) {
-            $this->setUrl($this->getEnvironment()->getUrl() . self::URI);
-            
-            $this->setContent(
-                http_build_query([
-                    'scope' => self::SCOPE,
-                    'grant_type' => self::GRANT_TYPE
-                ])
-            );
+            $this->setMethod(RequestAbstract::HTTP_POST)
+                ->setUrl($this->getEnvironment()->getUrl() . self::URI)
+                ->setContent(
+                    http_build_query([
+                        'scope' => self::SCOPE,
+                        'grant_type' => self::GRANT_TYPE
+                    ])
+                )
+                ->setHeaders([
+                    'Content-Type' => self::CONTENT_TYPE,
+                    'Authorization' => $this->getAuthentication()->getAuthString(),
+                ]);
 
-            $this->setHeaders([
-                'Content-Type' => self::CONTENT_TYPE,
-                'Authorization' => $this->getAuthentication()->getAuthString(),
-            ]);
-
-            $authorization = $this->sendRequest(RequestAbstract::HTTP_POST);
+            $authorization = $this->sendRequest();
 
             $this->getAuthentication()->setAuthorization($authorization);
 
