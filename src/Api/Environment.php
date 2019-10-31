@@ -3,11 +3,13 @@ namespace Getnet\Api;
 
 class Environment
 {
-    const STAGGING   = 'S';
-    const PRODUCTION = 'P';
+    const STAGGING   = 'STAGGING';
+    const PRODUCTION = 'PRODUCTION';
+    const SANDBOX    = 'SANDBOX';
     const URLS = [
         self::STAGGING   => 'https://api-homologacao.getnet.com.br/',
         self::PRODUCTION => 'https://api.getnet.com.br/',
+        self::SANDBOX    => 'https://api-sandbox.getnet.com.br',
     ];
 
     private $environment;

@@ -39,13 +39,23 @@ class EnvironmentTest extends TestCase
         return $environment;
     }
 
+    public function testSetAndGetEnvironmentSandbox()
+    {
+        $environment = new Environment();
+        $environment->setEnvironment(Environment::SANDBOX);
+
+        self::assertEquals(Environment::SANDBOX, $environment->getEnvironment());
+
+        return $environment;
+    }
+
     /**
      * @depends testSetAndGetEnvironmentProduction
      * @param Environment $environment
      */
     public function testGetUrlProduction(Environment $environment)
     {
-        self::assertEquals($this->data['P'], $environment->getUrl());
+        self::assertEquals($this->data['PRODUCTION'], $environment->getUrl());
     }
 
     /**
@@ -54,6 +64,15 @@ class EnvironmentTest extends TestCase
      */
     public function testGetUrlStagging(Environment $environment)
     {
-        self::assertEquals($this->data['S'], $environment->getUrl());
+        self::assertEquals($this->data['STAGGING'], $environment->getUrl());
+    }
+
+    /**
+     * @depends testSetAndGetEnvironmentSandbox
+     * @param Environment $environment
+     */
+    public function testGetUrlSandbox(Environment $environment)
+    {
+        self::assertEquals($this->data['SANDBOX'], $environment->getUrl());
     }
 }

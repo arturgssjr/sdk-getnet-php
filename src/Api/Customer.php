@@ -14,6 +14,8 @@ class Customer
     private $cellphoneNumber;
     private $email;
     private $observation;
+    private $billingAddress;
+    private $shippingAddress;
 
     /**
      * @return mixed
@@ -192,6 +194,46 @@ class Customer
     public function setObservation($observation)
     {
         $this->observation = $observation;
+        return $this;
+    }
+
+    /**
+     * Get the value of address
+     */ 
+    public function getBillingAddress()
+    {
+        return $this->billingAddress;
+    }
+
+    /**
+     * Set the value of address
+     *
+     * @return  self
+     */ 
+    public function setBillingAddress($billingAddress)
+    {
+        $this->billingAddress = $billingAddress;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of shippingAddress
+     */ 
+    public function getShippingAddress()
+    {
+        return $this->shippingAddress;
+    }
+
+    /**
+     * Set the value of shippingAddress
+     *
+     * @return  self
+     */ 
+    public function setShippingAddress($shippingAddress)
+    {
+        $this->shippingAddress = $shippingAddress;
+
         return $this;
     }
 }

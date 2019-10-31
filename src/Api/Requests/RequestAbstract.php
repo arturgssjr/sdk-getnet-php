@@ -52,14 +52,22 @@ abstract class RequestAbstract
 
     protected function sendRequest()
     {
-        $curl = curl_init();
+        $curl = curl_init($this->getUrl());
 
-        curl_setopt($curl, CURLOPT_URL, $this->getUrl());
+        $defaultCurlOptions = [
+            CURLOPT_CONNECTTIMEOUT => 60,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 60,
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_ENCODING       => '',
+        ];
+
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $this->getMethod());
         empty($this->getContent()) ?: curl_setopt($curl, CURLOPT_POSTFIELDS, $this->getContent());
         empty($this->getHeaders()) ?: curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getHeaders());
-        curl_setopt($curl, CURLOPT_ENCODING, '');
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        curl_setopt_array($curl, $defaultCurlOptions);
 
         $response = curl_exec($curl);
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);

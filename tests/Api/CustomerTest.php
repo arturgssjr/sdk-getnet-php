@@ -90,4 +90,18 @@ class CustomerTest extends TestCase
 
         self::assertEquals($this->data['document_number'], $this->customer->getDocumentNumber());
     }
+
+    public function testSetAndGetBillingAddress()
+    {
+        $this->customer->setBillingAddress($this->data['address']);
+
+        self::assertEquals($this->data['address'], $this->customer->getBillingAddress());
+    }
+
+    public function testSetAndGetShippingAddress()
+    {
+        $this->customer->setShippingAddress($this->data['address']);
+
+        self::assertEquals($this->data['address'], $this->customer->getShippingAddress());
+    }
 }

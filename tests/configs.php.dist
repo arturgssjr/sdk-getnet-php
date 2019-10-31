@@ -2,8 +2,9 @@
 
 return [
     'environment' => [
-        'S' => 'https://api-homologacao.getnet.com.br/',
-        'P' => 'https://api.getnet.com.br/',
+        'STAGGING'   => 'https://api-homologacao.getnet.com.br/',
+        'PRODUCTION' => 'https://api.getnet.com.br/',
+        'SANDBOX'    => 'https://api-sandbox.getnet.com.br',
     ],
     'seller' => [
         'client_id' => '',
@@ -21,6 +22,16 @@ return [
         'cellphone_number' => '5551999887766',
         'email' => 'customer@email.com.br',
         'observation' => 'O cliente tem interesse no plano x.',
+        'address' => [
+            'street' => 'Av. Brasil',
+            'number' => '1000',
+            'complement' => 'Sala 1',
+            'district' => 'São Geraldo',
+            'city' => 'Porto Alegre',
+            'state' => 'RS',
+            'country' => 'Brasil',
+            'postal_code' => '90230060'
+        ],
     ],
     'card' => [
         'brand'=> 'Mastercard',
