@@ -31,9 +31,9 @@ class TokenCardTest extends TestCase
 
     public function testSetAndGetTokenNumber()
     {
-        $this->tokenCard->setTokenNumber($this->data['tokenCard']['numberToken']);
+        $this->tokenCard->setTokenNumber($this->data['tokenCard']['number_token']);
 
-        self::assertEquals($this->data['tokenCard']['numberToken'], $this->tokenCard->getTokenNumber());
+        self::assertEquals($this->data['tokenCard']['number_token'], $this->tokenCard->getTokenNumber());
     }
 
     public function testGetCard()

@@ -77,9 +77,9 @@ class AddressTest extends TestCase
 
     public function testSetAndGetPostalCode()
     {
-        $this->address->setPostalCode($this->data['address']['postalCode']);
+        $this->address->setPostalCode($this->data['address']['postal_code']);
 
-        self::assertEquals($this->data['address']['postalCode'], $this->address->getPostalCode());
+        self::assertEquals($this->data['address']['postal_code'], $this->address->getPostalCode());
     }
 
     public function testGetCustomer()

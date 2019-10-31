@@ -47,7 +47,7 @@ class AuthenticationRequestTest extends TestCase
 
         self::assertIsArray($return);
         self::assertNotNull($return);
-        self::assertEquals(200, $return['statusCode']);
+        self::assertEquals(200, $return['status_code']);
         self::assertArrayHasKey('access_token', $return);
         self::assertArrayHasKey('token_type', $return);
         self::assertArrayHasKey('expires_in', $return);
@@ -72,7 +72,7 @@ class AuthenticationRequestTest extends TestCase
 
         self::assertIsArray($return);
         self::assertNotNull($return);
-        self::assertEquals(200, $return['statusCode']);
+        self::assertEquals(200, $return['status_code']);
         self::assertArrayHasKey('access_token', $return);
         self::assertArrayHasKey('token_type', $return);
         self::assertArrayHasKey('expires_in', $return);

@@ -55,7 +55,7 @@ class RequestAbstractTest extends TestCase
 
         self::assertIsArray($return);
         self::assertNotNull($return);
-        self::assertEquals(200, $return['statusCode']);
+        self::assertEquals(200, $return['status_code']);
     }
 
     public function testSendRequestCurlError()

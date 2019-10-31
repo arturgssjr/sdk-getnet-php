@@ -35,44 +35,44 @@ class CardTest extends TestCase
 
     public function testSetAndGetCardNumber()
     {
-        $this->card->setCardNumber($this->data['card']['cardNumber']);
+        $this->card->setCardNumber($this->data['card']['card_number']);
 
-        self::assertEquals($this->data['card']['cardNumber'], $this->card->getCardNumber());
+        self::assertEquals($this->data['card']['card_number'], $this->card->getCardNumber());
     }
 
     public function testSetAndGetCardholderName()
     {
-        $this->card->setCardholderName($this->data['card']['cardholderName']);
+        $this->card->setCardholderName($this->data['card']['cardholder_name']);
 
-        self::assertEquals($this->data['card']['cardholderName'], $this->card->getCardholderName());
+        self::assertEquals($this->data['card']['cardholder_name'], $this->card->getCardholderName());
     }
 
     public function testSetAndGetExpirationMonth()
     {
-        $this->card->setExpirationMonth($this->data['card']['expirationMonth']);
+        $this->card->setExpirationMonth($this->data['card']['expiration_month']);
 
-        self::assertEquals($this->data['card']['expirationMonth'], $this->card->getExpirationMonth());
+        self::assertEquals($this->data['card']['expiration_month'], $this->card->getExpirationMonth());
     }
 
     public function testSetAndGetExpirationYear()
     {
-        $this->card->setExpirationYear($this->data['card']['expirationYear']);
+        $this->card->setExpirationYear($this->data['card']['expiration_year']);
 
-        self::assertEquals($this->data['card']['expirationYear'], $this->card->getExpirationYear());
+        self::assertEquals($this->data['card']['expiration_year'], $this->card->getExpirationYear());
     }
 
     public function testSetAndGetCardholderIdentification()
     {
-        $this->card->setCardholderIdentification($this->data['card']['cardholderIdentification']);
+        $this->card->setCardholderIdentification($this->data['card']['cardholder_identification']);
 
-        self::assertEquals($this->data['card']['cardholderIdentification'], $this->card->getCardholderIdentification());
+        self::assertEquals($this->data['card']['cardholder_identification'], $this->card->getCardholderIdentification());
     }
 
     public function testSetAndGetSecurityCode()
     {
-        $this->card->setSecurityCode($this->data['card']['securityCode']);
+        $this->card->setSecurityCode($this->data['card']['security_code']);
 
-        self::assertEquals($this->data['card']['securityCode'], $this->card->getSecurityCode());
+        self::assertEquals($this->data['card']['security_code'], $this->card->getSecurityCode());
     }
 
     public function testGetCustomer()

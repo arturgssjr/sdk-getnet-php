@@ -27,9 +27,9 @@ class TokenCardRequestTest extends TestCase
         $this->seller = new Seller($this->data['seller']['client_id'], $this->data['seller']['secret_id'], $this->data['seller']['seller_id']);
         $this->authentication = new Authentication($this->seller);
         $this->customer = new Customer();
-        $this->customer->setCustomerId($this->data['customer']['customerId']);
+        $this->customer->setCustomerId($this->data['customer']['customer_id']);
         $this->card = new Card($this->customer);
-        $this->card->setCardNumber($this->data['card']['cardNumber']);
+        $this->card->setCardNumber($this->data['card']['card_number']);
     }
 
     protected function tearDown(): void

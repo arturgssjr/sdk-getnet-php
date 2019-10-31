@@ -31,11 +31,11 @@ class VaultCardRequestTest extends TestCase
         $this->seller = new Seller($this->data['seller']['client_id'], $this->data['seller']['secret_id'], $this->data['seller']['seller_id']);
         $this->authentication = new Authentication($this->seller);
         $this->customer = new Customer();
-        $this->customer->setCustomerId($this->data['customer']['customerId']);
+        $this->customer->setCustomerId($this->data['customer']['customer_id']);
         $this->card = new Card($this->customer);
-        $this->card->setCardNumber($this->data['card']['cardNumber']);
-        $this->card->setExpirationMonth($this->data['card']['expirationMonth']);
-        $this->card->setExpirationYear($this->data['card']['expirationYear']);
+        $this->card->setCardNumber($this->data['card']['card_number']);
+        $this->card->setExpirationMonth($this->data['card']['expiration_month']);
+        $this->card->setExpirationYear($this->data['card']['expiration_year']);
         $this->vaultCard = new VaultCard();
     }
 
@@ -69,7 +69,7 @@ class VaultCardRequestTest extends TestCase
         self::assertNotNull($return);
         self::assertArrayHasKey('card_id', $return);
         self::assertArrayHasKey('number_token', $return);
-        self::assertEquals(201, $return['statusCode']);
+        self::assertEquals(201, $return['status_code']);
         self::assertEquals(36, strlen($return['card_id']));
         self::assertEquals(128, strlen($return['number_token']));
 
@@ -98,7 +98,7 @@ class VaultCardRequestTest extends TestCase
         self::assertNotNull($return);
         self::assertArrayHasKey('card_id', $return);
         self::assertArrayHasKey('number_token', $return);
-        self::assertEquals(201, $return['statusCode']);
+        self::assertEquals(201, $return['status_code']);
         self::assertEquals(36, strlen($return['card_id']));
         self::assertEquals(128, strlen($return['number_token']));
     }
@@ -116,7 +116,7 @@ class VaultCardRequestTest extends TestCase
         $getVaultCard = $reflector->getMethod('getVaultCard');
 
         $return = $getVaultCard->invokeArgs($testedClass, [
-            $this->data['customer']['customerId']
+            $this->data['customer']['customer_id']
         ]);
 
         self::assertNotNull($return);
@@ -138,7 +138,7 @@ class VaultCardRequestTest extends TestCase
         $getVaultCard = $reflector->getMethod('getVaultCard');
 
         $return = $getVaultCard->invokeArgs($testedClass, [
-            $this->data['customer']['customerId'],
+            $this->data['customer']['customer_id'],
             $this->data['vaultCardRequest']['status']['active'],
         ]);
 

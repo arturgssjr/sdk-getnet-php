@@ -81,7 +81,7 @@ abstract class RequestAbstract
             case 200 :
             case 201 :
             case 202 :
-                $unserialized['statusCode'] = $statusCode;
+                $unserialized['status_code'] = $statusCode;
                 return $unserialized;
             case 204 :
                 return $statusCode;

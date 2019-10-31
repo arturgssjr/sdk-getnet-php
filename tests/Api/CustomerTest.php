@@ -23,9 +23,9 @@ class CustomerTest extends TestCase
 
     public function testSetAndGetCustomerId()
     {
-        $this->customer->setCustomerId($this->data['customerId']);
+        $this->customer->setCustomerId($this->data['customer_id']);
 
-        self::assertEquals($this->data['customerId'], $this->customer->getCustomerId());
+        self::assertEquals($this->data['customer_id'], $this->customer->getCustomerId());
     }
 
     public function testSetAndGetObservation()
@@ -37,9 +37,9 @@ class CustomerTest extends TestCase
 
     public function testSetAndGetFirstName()
     {
-        $this->customer->setFirstName($this->data['firstName']);
+        $this->customer->setFirstName($this->data['first_name']);
         
-        self::assertEquals($this->data['firstName'], $this->customer->getFirstName());
+        self::assertEquals($this->data['first_name'], $this->customer->getFirstName());
     }
 
     public function testSetAndGetEmail()
@@ -51,43 +51,43 @@ class CustomerTest extends TestCase
 
     public function testSetAndGetCellphoneNumber()
     {
-        $this->customer->setCellphoneNumber($this->data['cellphoneNumber']);
+        $this->customer->setCellphoneNumber($this->data['cellphone_number']);
         
-        self::assertEquals($this->data['cellphoneNumber'], $this->customer->getCellphoneNumber());
+        self::assertEquals($this->data['cellphone_number'], $this->customer->getCellphoneNumber());
     }
 
     public function testSetAndGetBirthDate()
     {
-        $this->customer->setBirthDate($this->data['birthDate']);
+        $this->customer->setBirthDate($this->data['birth_date']);
 
-        self::assertEquals($this->data['birthDate'], $this->customer->getBirthDate());
+        self::assertEquals($this->data['birth_date'], $this->customer->getBirthDate());
     }
 
     public function testSetAndGetPhoneNumber()
     {
-        $this->customer->setPhoneNumber($this->data['phoneNumber']);
+        $this->customer->setPhoneNumber($this->data['phone_number']);
 
-        self::assertEquals($this->data['phoneNumber'], $this->customer->getPhoneNumber());
+        self::assertEquals($this->data['phone_number'], $this->customer->getPhoneNumber());
     }
 
     public function testSetAndGetLastName()
     {
-        $this->customer->setLastName($this->data['lastName']);
+        $this->customer->setLastName($this->data['last_name']);
 
-        self::assertEquals($this->data['lastName'], $this->customer->getLastName());
+        self::assertEquals($this->data['last_name'], $this->customer->getLastName());
     }
 
     public function testSetAndGetDocumentType()
     {
-        $this->customer->setDocumentType($this->data['documentType']);
+        $this->customer->setDocumentType($this->data['document_type']);
 
-        self::assertEquals($this->data['documentType'], $this->customer->getDocumentType());
+        self::assertEquals($this->data['document_type'], $this->customer->getDocumentType());
     }
 
     public function testSetAndGetDocumentNumber()
     {
-        $this->customer->setDocumentNumber($this->data['documentNumber']);
+        $this->customer->setDocumentNumber($this->data['document_number']);
 
-        self::assertEquals($this->data['documentNumber'], $this->customer->getDocumentNumber());
+        self::assertEquals($this->data['document_number'], $this->customer->getDocumentNumber());
     }
 }
