@@ -37,6 +37,7 @@
     }
   },
   "scripts": {
-    "test": "vendor/bin/phpunit"
+    "post-install-cmd": "composer dump-autoload",
+    "post-update-cmd": "composer dump-autoload"
   }
 }
