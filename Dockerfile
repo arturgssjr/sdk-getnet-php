@@ -37,7 +37,11 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; then \
 COPY ./conf/xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini
 RUN sed -i "s|xdebug.remote_autostart=0|xdebug.remote_autostart=1|g" $PHP_INI_DIR/conf.d/xdebug.ini && \
     sed -i "s|xdebug.remote_enable=0|xdebug.remote_enable=1|g" $PHP_INI_DIR/conf.d/xdebug.ini && \
-    sed -i "s|xdebug.cli_color=0|xdebug.cli_color=1|g" $PHP_INI_DIR/conf.d/xdebug.ini
+    sed -i "s|xdebug.cli_color=0|xdebug.cli_color=1|g" $PHP_INI_DIR/conf.d/xdebug.ini && \
+    sed -i "s|xdebug.force_display_errors=0|xdebug.force_display_errors=1|g" $PHP_INI_DIR/conf.d/xdebug.ini && \
+    # sed -i "s|xdebug.force_error_reporting=E_NOTICE|xdebug.force_error_reporting=E_ALL|g" $PHP_INI_DIR/conf.d/xdebug.ini && \
+    # sed -i "s|xdebug.scream=0|xdebug.scream=1|g" $PHP_INI_DIR/conf.d/xdebug.ini && \
+    sed -i "s|xdebug.collect_params=0|xdebug.collect_params=4|g" $PHP_INI_DIR/conf.d/xdebug.ini
 
 # Configuração OPcache
 ARG INSTALL_OPCACHE=false
