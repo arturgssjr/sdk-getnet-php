@@ -11,6 +11,11 @@ RUN pecl install xdebug && docker-php-ext-enable xdebug
 RUN echo 'xdebug.remote_port=9000' >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 RUN echo 'xdebug.remote_enable=1' >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 RUN echo 'xdebug.remote_connect_back=1' >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
+RUN echo 'xdebug.cli_color=1' >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
+RUN echo 'xdebug.force_display_errors=1' >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
+RUN echo 'xdebug.force_error_reporting=E_ALL' >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
+RUN echo 'xdebug.scream=1' >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
+RUN echo 'xdebug.collect_params=4' >> $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
 
 # Configuração OPcache
 RUN docker-php-ext-install opcache
