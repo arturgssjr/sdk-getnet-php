@@ -26,20 +26,20 @@ class SellerTest extends TestCase
     {
         $this->seller->setClientId($this->data['seller']['client_id']);
 
-        $this->assertEquals($this->data['seller']['client_id'], $this->seller->getClientId());
+        self::assertEquals($this->data['seller']['client_id'], $this->seller->getClientId());
     }
 
     public function testSetAndGetSellerId()
     {
         $this->seller->setSellerId($this->data['seller']['seller_id']);
 
-        $this->assertEquals($this->data['seller']['seller_id'], $this->seller->getSellerId());
+        self::assertEquals($this->data['seller']['seller_id'], $this->seller->getSellerId());
     }
 
     public function testSetAndGetSecretId()
     {
         $this->seller->setSecretId($this->data['seller']['secret_id']);
 
-        $this->assertEquals($this->data['seller']['secret_id'], $this->seller->getSecretId());
+        self::assertEquals($this->data['seller']['secret_id'], $this->seller->getSecretId());
     }
 }

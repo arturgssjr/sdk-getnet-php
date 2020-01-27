@@ -9,3 +9,4 @@ configs.php
 .env
 *.override.yml
 /nbproject/
+phpcs.xml

@@ -1,76 +1,65 @@
 <?php
 namespace Getnet\Api;
 
-use Getnet\Api\Requests\AuthenticationRequest;
-
 class Authentication
 {
-    private $seller;
     private $authorization;
+    /**
+     * @var Seller
+     */
+    private $seller;
 
     public function __construct(Seller $seller)
     {
-        $this->setSeller($seller);
-    }
-
-    public function getAuthentication()
-    {
-        return 'Basic ' . base64_encode($this->getSeller()->getClientId() . ':' . $this->getSeller()->getSecretId());
+        $this->seller = $seller;
     }
 
     /**
-     * Get the value of seller
-     */ 
-    public function getSeller()
+     * @return mixed
+     */
+    public function getAuthorization()
+    {
+        return $this->authorization;
+    }
+
+    /**
+     * @param mixed $authorization
+     * @return Authentication
+     */
+    public function setAuthorization(array $authorization)
+    {
+        $this->authorization = $authorization;
+        return $this;
+    }
+
+    /**
+     * @return Seller
+     */
+    public function getSeller(): Seller
     {
         return $this->seller;
     }
 
     /**
-     * Set the value of seller
-     *
-     * @param $seller
-     * @return  self
+     * @param Seller $seller
+     * @return Authentication
      */
-    public function setSeller($seller)
+    public function setSeller(Seller $seller): Authentication
     {
         $this->seller = $seller;
         return $this;
     }
 
     /**
-     * Get the value of authorization
-     */ 
-    public function getAuthorization()
-    {
-        if (time() >= ($this->authorization['timestamp'] + $this->authorization['expires_in'] - AuthenticationRequest::SECURITY_TIME)) {
-            $this->authorization = null;
-        }
-        return $this->authorization;
-    }
-
-    /**
-     * Set the value of authorization
-     *
-     * @param $authorization
-     * @return  self
+     * @return string
      */
-    public function setAuthorization(array $authorization)
+    public function getAuthString()
     {
-        $this->authorization = $authorization;
-
-        if (!empty($this->authorization)) {
-            $this->authorization['timestamp'] = time();
-        }
-
-        return $this;
+        return 'Basic ' . base64_encode("{$this->getSeller()->getClientId()}:{$this->getSeller()->getSecretId()}");
     }
 
     public function getAuthorizationToken()
     {
-        if (!isset($this->getAuthorization()['access_token']) || !isset($this->getAuthorization()['token_type'])) {
-            return null;
-        }
         return $this->getAuthorization()['token_type'] . ' ' . $this->getAuthorization()['access_token'];
     }
 }

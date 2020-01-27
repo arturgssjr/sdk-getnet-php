@@ -2,11 +2,13 @@
 
 namespace Getnet\Api\Requests;
 
-use Getnet\Api\Authentication;
 use Getnet\Api\Environment;
+use Getnet\Api\Authentication;
+use Getnet\Api\Utils\CurlUtil;
+use Getnet\Api\Utils\JsonUtil;
+use Getnet\Api\Utils\ArrayUtil;
 use Getnet\Api\Exceptions\GetnetException;
-use Getnet\Api\Helpers\ArrayUtil;
-use Getnet\Api\Helpers\JsonUtil;
+use Getnet\Api\Requests\AuthenticationRequest;
 
 abstract class RequestAbstract
 {
@@ -20,72 +22,58 @@ abstract class RequestAbstract
 
     private $environment;
     private $authentication;
-    private $curlOptions;
 
-    public function __construct(Authentication $authentication, Environment $environment, array $curlOptions = [])
-    {
-        $this->setEnvironment($environment);
-        $this->setAuthentication($authentication);
-        $this->setCurlOptions($curlOptions);
-    }
+    private $url;
+    private $method = self::HTTP_GET;
+    private $headers;
+    private $content;
 
-
-    public function getEnvironment()
-    {
-        return $this->environment;
-    }
-
-    public function setEnvironment(Environment $environment)
+    public function __construct(Authentication $authentication, Environment $environment)
     {
         $this->environment = $environment;
-        return $this;
+        $this->authentication = $authentication;
     }
 
-    public function getAuthentication()
+    /**
+     * @return Authentication
+     */
+    public function getAuthentication(): Authentication
     {
         return $this->authentication;
     }
 
-    public function setAuthentication(Authentication $authentication)
+    /**
+     * @return Environment
+     */
+    public function getEnvironment(): Environment
     {
-        $this->authentication = $authentication;
-        return $this;
+        return $this->environment;
     }
 
-    public function getCurlOptions()
+    protected function sendRequest()
     {
-        return $this->curlOptions;
-    }
+        $curl = curl_init($this->getUrl());
 
-    public function setCurlOptions($curlOptions)
-    {
-        $this->curlOptions = $curlOptions;
-        return $this;
-    }
-
-    protected function sendRequest($method, $url = '', $content = NULL, array $headers = [])
-    {
-        $url = empty($url) ? $this->_getUrl() : $url;
-        $content = empty($content) ? $this->_getContent() : $content;
-        $headers = empty($headers) ? $this->_getHeader() : $headers;
-
-        $curl = curl_init($url);
-
-        $this->setCurlOptions([
-            CURLOPT_CUSTOMREQUEST => $method,
-            CURLOPT_POSTFIELDS => $content,
-            CURLOPT_HTTPHEADER => ArrayUtil::convertArrayToHeader($headers),
-            CURLOPT_ENCODING => '',
+        $defaultCurlOptions = [
+            CURLOPT_CONNECTTIMEOUT => 60,
             CURLOPT_RETURNTRANSFER => true,
-        ]);
+            CURLOPT_TIMEOUT        => 60,
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_ENCODING       => '',
+        ];
 
-        curl_setopt_array($curl, $this->getCurlOptions());
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $this->getMethod());
+        empty($this->getContent()) ?: curl_setopt($curl, CURLOPT_POSTFIELDS, $this->getContent());
+        empty($this->getHeaders()) ?: curl_setopt($curl, CURLOPT_HTTPHEADER, $this->getHeaders());
+
+        curl_setopt_array($curl, $defaultCurlOptions);
 
         $response = curl_exec($curl);
         $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         if (curl_errno($curl)) {
-            throw new GetnetException('Curl error: ' . curl_error($curl), self::CURL_ERROR_CODE);
+            throw new GetnetException('cURL error: ' . CurlUtil::getCurlErrnoDescription(curl_errno($curl)), self::CURL_ERROR_CODE);
         }
 
         curl_close($curl);
@@ -101,8 +89,10 @@ abstract class RequestAbstract
             case 200 :
             case 201 :
             case 202 :
-                $unserialized['statusCode'] = $statusCode;
+                $unserialized['status_code'] = $statusCode;
                 return $unserialized;
+            case 204 :
+                return $statusCode;
             default:
                 $message = (is_array($unserialized) ? (isset($unserialized['error_description']) ? $unserialized['error_description'] : $unserialized['message']) : $unserialized);
                 $details = (isset($unserialized['details']) ? $unserialized['details'] : []);
@@ -110,18 +100,90 @@ abstract class RequestAbstract
         }
     }
 
-    protected function _getUrl()
+    protected function _getAuthorization()
     {
-        return '';
+        if (!$this->getAuthentication()->getAuthorization()) {
+            (new AuthenticationRequest($this->getAuthentication(), $this->getEnvironment()))->getAuthorization();
+        }
     }
 
-    protected function _getContent()
+    /**
+     * Get the value of url
+     */ 
+    protected function getUrl()
     {
-        return [];
+        return $this->url;
     }
 
-    protected function _getHeader()
+    /**
+     * Set the value of url
+     *
+     * @return  self
+     */ 
+    protected function setUrl($url)
     {
-        return [];
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of headers
+     */ 
+    protected function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Set the value of headers
+     *
+     * @return  self
+     */ 
+    protected function setHeaders($headers)
+    {
+        $this->headers = ArrayUtil::convertArrayToHeader($headers);
+
+        return $this;
+    }
+
+    /**
+     * Get the value of content
+     */ 
+    protected function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * Set the value of content
+     *
+     * @return  self
+     */ 
+    protected function setContent($content)
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of method
+     */ 
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
+    /**
+     * Set the value of method
+     *
+     * @return  self
+     */ 
+    public function setMethod($method)
+    {
+        $this->method = $method;
+
+        return $this;
     }
 }

@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Getnet\Api\Helpers;
+namespace Getnet\Api\Utils;
 
 
 class ArrayUtil
 {
 
-    public static function convertArrayToHeader($array)
+    public static function convertArrayToHeader(array $array)
     {
         return array_map(
             function ($k, $v) {

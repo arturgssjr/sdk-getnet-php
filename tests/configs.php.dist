@@ -1,13 +1,105 @@
 <?php
 
 return [
+    'environment' => [
+        'STAGGING'   => 'https://api-homologacao.getnet.com.br/',
+        'PRODUCTION' => 'https://api.getnet.com.br/',
+        'SANDBOX'    => 'https://api-sandbox.getnet.com.br',
+    ],
     'seller' => [
         'client_id' => '',
         'secret_id' => '',
         'seller_id' => '',
     ],
-    'cardTokenization' => [
-        'cardNumber' => '',
-        'customerId' => '',
-    ]
+    'customer' => [
+        'customer_id'=> 'customer_21081826',
+        'first_name' => 'João',
+        'last_name' => 'da Silva',
+        'document_type' => 'CPF',
+        'document_number' => '12345678912',
+        'birth_date' => '1976-02-21',
+        'phone_number' => '5551999887766',
+        'cellphone_number' => '5551999887766',
+        'email' => 'customer@email.com.br',
+        'observation' => 'O cliente tem interesse no plano x.',
+        'address' => [
+            'street' => 'Av. Brasil',
+            'number' => '1000',
+            'complement' => 'Sala 1',
+            'district' => 'São Geraldo',
+            'city' => 'Porto Alegre',
+            'state' => 'RS',
+            'country' => 'Brasil',
+            'postal_code' => '90230060'
+        ],
+    ],
+    'card' => [
+        'brand'=> 'Mastercard',
+        'card_number' => 5155901222280001,
+        'cardholder_name'=> 'JOAO DA SILVA',
+        'expiration_month'=> '12',
+        'expiration_year'=> '20',
+        'cardholder_identification'=> '12345678912',
+        'security_code'=> '123',
+    ],
+    'tokenCard' => [
+        'number_token'=> 'dfe05208b105578c070f806c80abd3af09e246827d29b866cf4ce16c205849977c9496cbf0d0234f42339937f327747075f68763537b90b31389e01231d4d13c',
+    ],
+    'address' => [
+        'street' => 'Av. Brasil',
+        'number' => '1000',
+        'complement' => 'Sala 1',
+        'district' => 'São Geraldo',
+        'city' => 'Porto Alegre',
+        'state' => 'RS',
+        'country' => 'Brasil',
+        'postal_code' => '90230060'
+    ],
+    'authorization' => [
+        'access_token' => 'ca22a2ge-1914-4b0c-a0fb-d3ce0fde7346',
+        'token_type' => 'Bearer',
+        'expires_in' => 3600,
+        'scope' => 'oob',
+        'status_code' => 200,
+    ],
+    'vaultCard' => [
+        'post' => [
+            'card_id' => 'e8ad2ae4-9e3e-4532-998f-1a5a11e56e58',
+            'number_token' => 'dfe05208b105578c070f806c80abd3af09e246827d29b866cf4ce16c205849977c9496cbf0d0234f42339937f327747075f68763537b90b31389e01231d4d13c',
+        ],
+        'cards' => [
+            [
+                'card_id' => 'e8ad2ae4-9e3e-4532-998f-1a5a11e56e58',
+                'last_four_digits' => '1212',
+                'expiration_month' => '12',
+                'expiration_year' => '20',
+                'brand' => 'Mastercard',
+                'cardholder_name' => 'JOAO DA SILVA',
+                'customer_id' => 'customer_21081826',
+                'number_token' => 'dfe05208b105578c070f806c80abd3af09e246827d29b866cf4ce16c205849977c9496cbf0d0234f42339937f327747075f68763537b90b31389e01231d4d13c',
+                'used_at' => '2017-04-19T16:30:30Z',
+                'created_at' => '2017-04-19T16:30:30Z',
+                'updated_at' => '2017-04-19T16:30:30Z',
+                'status' => 'active',
+            ],
+        ],
+    ],
+    'vaultCardRequest' => [
+        'verify_card'=> false,
+        'status' => [
+            'all' => 'all',
+            'active' => 'active',
+            'renewed' => 'renewed',
+        ],
+    ],
+    'payment' => [
+        'verification' => [
+            'number_token' => 'dfe05208b105578c070f806c80abd3af09e246827d29b866cf4ce16c205849977c9496cbf0d0234f42339937f327747075f68763537b90b31389e01231d4d13c',
+            'brand' => 'Mastercard',
+            'cardholder_name' => 'JOAO DA SILVA',
+            'expiration_month' => '12',
+            'expiration_year' => '20',
+            'security_code' => '123',
+        ]
+    ],
 ];

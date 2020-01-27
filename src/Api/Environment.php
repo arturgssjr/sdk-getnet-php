@@ -3,42 +3,42 @@ namespace Getnet\Api;
 
 class Environment
 {
-    const STAGGING      = 'S';
-    const PRODUCTION    = 'P';
+    const STAGGING   = 'STAGGING';
+    const PRODUCTION = 'PRODUCTION';
+    const SANDBOX    = 'SANDBOX';
     const URLS = [
         self::STAGGING   => 'https://api-homologacao.getnet.com.br/',
         self::PRODUCTION => 'https://api.getnet.com.br/',
+        self::SANDBOX    => 'https://api-sandbox.getnet.com.br',
     ];
 
     private $environment;
 
     public function __construct($environment = self::STAGGING)
     {
-        $this->setEnvironment($environment);
-    }
-
-    public function getUrl()
-    {
-        return self::URLS[$this->getEnvironment()];
+        $this->environment = $environment;
     }
 
     /**
-     * Get the value of environment
-     */ 
-    public function getEnvironment()
+     * @return string
+     */
+    public function getEnvironment(): string
     {
         return $this->environment;
     }
 
     /**
-     * Set the value of environment
-     *
-     * @param $environment
-     * @return  self
+     * @param string $environment
+     * @return Environment
      */
-    public function setEnvironment($environment)
+    public function setEnvironment(string $environment): Environment
     {
         $this->environment = $environment;
         return $this;
+    }
+
+    public function getUrl()
+    {
+        return self::URLS[$this->getEnvironment()];
     }
 }

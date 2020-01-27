@@ -2,13 +2,14 @@
 
 namespace GetnetTests\Api\Requests;
 
-use Getnet\Api\Authentication;
-use Getnet\Api\Environment;
-use Getnet\Api\Exceptions\GetnetException;
-use Getnet\Api\Requests\RequestAbstract;
-use Getnet\Api\Seller;
-use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use ReflectionObject;
+use Getnet\Api\Seller;
+use Getnet\Api\Environment;
+use Getnet\Api\Authentication;
+use PHPUnit\Framework\TestCase;
+use Getnet\Api\Requests\RequestAbstract;
+use Getnet\Api\Exceptions\GetnetException;
 
 class RequestAbstractTest extends TestCase
 {
@@ -46,22 +47,22 @@ class RequestAbstractTest extends TestCase
         $sendRequest = $reflector->getMethod('sendRequest');
         $sendRequest->setAccessible(true);
 
-        $return = $sendRequest->invokeArgs(
-            $testedClass, [
-                RequestAbstract::HTTP_GET,
-                'http://viacep.com.br/ws/74915380/json/',
-            ]
-        );
+        $setUrl = $reflector->getMethod('setUrl');
+        $setUrl->setAccessible(true);
+        $setUrl->invokeArgs($testedClass, ['https://viacep.com.br/ws/74915380/json']);
 
-        $this->assertIsArray($return);
-        $this->assertEquals(200, $return['statusCode']);
+        $return = $sendRequest->invoke($testedClass);
+
+        self::assertIsArray($return);
+        self::assertNotNull($return);
+        self::assertEquals(200, $return['status_code']);
     }
 
     public function testSendRequestCurlError()
     {
         $this->expectException(GetnetException::class);
         $this->expectExceptionCode(RequestAbstract::CURL_ERROR_CODE);
-        $this->expectExceptionMessage('Curl error: ');
+        $this->expectExceptionMessage('cURL error: ');
 
         $testedClass = $this->getMockForAbstractClass(RequestAbstract::class, [
             $this->authentication,
@@ -73,12 +74,11 @@ class RequestAbstractTest extends TestCase
         $sendRequest = $reflector->getMethod('sendRequest');
         $sendRequest->setAccessible(true);
 
-        $sendRequest->invokeArgs(
-            $testedClass, [
-                RequestAbstract::HTTP_GET,
-                '',
-            ]
-        );
+        $setUrl = $reflector->getMethod('setUrl');
+        $setUrl->setAccessible(true);
+        $setUrl->invokeArgs($testedClass, ['']);
+
+        $sendRequest->invoke($testedClass);
     }
 
 }

@@ -7,6 +7,13 @@ services:
       dockerfile: Dockerfile
       args:
         - TZ=${TZ}
+        - INSTALL_XDEBUG=${INSTALL_XDEBUG}
+        - INSTALL_OPCACHE=${INSTALL_OPCACHE}
+        - APPLICATION_ENVIRONMENT=${APPLICATION_ENVIRONMENT}
+    environment: 
+      - GETNET_CLIENT_ID=${GETNET_CLIENT_ID}
+      - GETNET_SECRET_ID=${GETNET_SECRET_ID}
+      - GETNET_SELLER_ID=${GETNET_SELLER_ID}
     tty: true
     volumes: 
       - .:/var/www/
